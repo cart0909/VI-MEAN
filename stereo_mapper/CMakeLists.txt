@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(stereo_mapper)
 
 set(CMAKE_BUILD_TYPE "Release")
-set(CMAKE_CXX_FLAGS "-std=c++11 -DEIGEN_DONT_PARALLELIZE")
+set(CMAKE_CXX_FLAGS "-DEIGEN_DONT_PARALLELIZE")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g")
 
 
@@ -17,6 +17,11 @@ find_package(catkin REQUIRED COMPONENTS
     dynamic_reconfigure
     )
 
+include_directories(
+    ${catkin_INCLUDE_DIRS}
+    )
+
+
 generate_dynamic_reconfigure_options(
     cfg/debug.cfg
     )
@@ -24,7 +29,10 @@ generate_dynamic_reconfigure_options(
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED
+NO_MODULE # should be optional, tells CMake to use config mode
+PATHS /usr/local # look here
+NO_DEFAULT_PATH) # and don't look anywhere else
 
 find_package(CUDA REQUIRED)
 

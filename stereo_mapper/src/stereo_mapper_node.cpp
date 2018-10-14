@@ -5,8 +5,6 @@
 #include <ros/ros.h>
 
 #include <opencv2/opencv.hpp>
-#include <opencv2/gpu/gpu.hpp>
-#include <opencv2/contrib/contrib.hpp>
 
 #include <tf/transform_broadcaster.h>
 #include <message_filters/subscriber.h>
@@ -494,7 +492,8 @@ cv::Mat showColorDep(const cv::Mat &result)
 //    }
 //}
 
-cv::StereoBM bm(cv::StereoBM::BASIC_PRESET, 128, 21);
+//cv::StereoBM bm(cv::StereoBM::BASIC_PRESET, 128, 21);
+cv::Ptr<cv::StereoBM> bm = cv::StereoBM::create(128, 21);
 
 cv::Mat blockMatching(const std::string name, const cv::Mat &img_l, const cv::Mat &img_r)
 {
@@ -514,7 +513,7 @@ cv::Mat blockMatching(const std::string name, const cv::Mat &img_l, const cv::Ma
 
     cv::Mat disp_16, disp;
     cv::Mat_<cv::Vec3f> dense_points_;
-    bm(img_ll, img_rr, disp_16);
+    bm->compute(img_ll, img_rr, disp_16);
     disp_16.convertTo(disp, CV_32F, 1.0f / 16);
     cv::reprojectImageTo3D(disp, dense_points_, Q, true);
     sendCloud2(dense_points_, img_ll);
@@ -915,8 +914,13 @@ int main(int argc, char **argv)
 
     std::cout << CALIB_DIR + CAM_NAME + "/left.yml" << std::endl;
     cv::FileStorage param_reader_l(CALIB_DIR + CAM_NAME + "/left.yml", cv::FileStorage::READ);
+    if(!param_reader_l.isOpened()) {
+        ROS_INFO_STREAM("file cannot open...");
+    }
     param_reader_l["camera_matrix"] >> K1;
     param_reader_l["distortion_coefficients"] >> D1;
+    ROS_INFO_STREAM("K1" << K1);
+    ROS_INFO_STREAM("D1" << D1);
 /*
     param_reader_l["T_BS"] >> T_BS;
     cv::cv2eigen(T_BS.rowRange(0, 3).colRange(0, 3), R_bs);
@@ -924,8 +928,8 @@ int main(int argc, char **argv)
 */
 
     cv::cv2eigen(K1, K_eigen);
-    cv::cv2eigen(K, K_eigen);
-    std::cout << K_eigen << std::endl;
+//    cv::cv2eigen(K, K_eigen);
+//    std::cout << K_eigen << std::endl;
     mapper.initIntrinsic(K1, D1, K1, D1);
 
 /*
