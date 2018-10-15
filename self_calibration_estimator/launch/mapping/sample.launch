@@ -16,7 +16,7 @@
         <remap from="~imu" to="/imu_3dm_gx4/imu" />
         <remap from="~raw_image" to="/mv_25001498/image_raw" />
     </node>
-    <node name="self_calibration_estimator" pkg="self_calibration_estimator" type="self_calibration_estimator" output="screen">
+    <node name="self_calibration_estimator" pkg="self_calibration_estimator" type="self_calibration_estimator" output="screen" launch-prefix="xterm -e gdb -ex run --args ">
         <param name="max_feature_cnt" type="int" value="2000000" />
         <param name="num_of_iter" type="int" value="10" />
         <param name="calib_threshold_ric" type="double" value="0.0" />

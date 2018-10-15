@@ -283,7 +283,7 @@ void process()
                         }
                     }
                     cv::imshow("vis", stereo_img);
-                    cv::waitKey(5);
+                    cv::waitKey(1);
                     //pub_match.publish(ptr->toImageMsg());
                 }
             }

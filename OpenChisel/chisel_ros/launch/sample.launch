@@ -3,7 +3,7 @@
 
 
     <!-- node name="Chisel" pkg="chisel_ros" type="ChiselNode" output="screen" launch-prefix="taskset -c 0,1" -->
-    <node name="Chisel" pkg="chisel_ros" type="ChiselNode" output="screen" >
+    <node name="Chisel" pkg="chisel_ros" type="ChiselNode" output="screen">
         <param name="chunk_size_x" value="8"/>
         <param name="chunk_size_y" value="8"/>
         <param name="chunk_size_z" value="8"/>
